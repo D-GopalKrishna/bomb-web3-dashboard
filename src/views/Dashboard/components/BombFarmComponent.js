@@ -23,9 +23,8 @@ const BombFarmComponent = () => {
   
   
     // const bank = useBank(bankId);
-    // let statsOnPool = useStakeToBomb(bank);
-  
-  
+    // let statsOnPool = useStakeToBomb(bank);  
+
     return (
         <div style={styles.container}>
             <div style={styles.heading}>
