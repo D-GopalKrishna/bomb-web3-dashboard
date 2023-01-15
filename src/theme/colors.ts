@@ -44,3 +44,11 @@ export const teal = {
 export const newNavy = {
   200: '171923',
 };
+
+
+export const bombFinanceColors={
+  'cardBorder': '#728CDF',
+  'cardBg': '#23284B',
+  'text': '#FFFFFF',
+  'btnBorder': '#FFF',
+}

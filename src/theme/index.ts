@@ -1,4 +1,4 @@
-import {black, teal, grey, red, white, yellow, newNavy} from './colors';
+import {black, teal, grey, red, white, yellow, newNavy, bombFinanceColors} from './colors';
 
 const theme = {
   borderRadius: 13,
@@ -28,6 +28,7 @@ const theme = {
     7: 64,
   },
   topBarSize: 72,
+  bombFinanceColors,
 };
 
 export default theme;

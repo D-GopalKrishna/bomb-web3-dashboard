@@ -3,7 +3,6 @@ import {Context} from '../contexts/BombFinanceProvider';
 
 const useBombFinance = () => {
   const {bombFinance} = useContext(Context);
-  // console.log("useBombFinance", bombFinance)
   return bombFinance;
 };
 

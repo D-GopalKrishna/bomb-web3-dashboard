@@ -12,7 +12,6 @@ export const Context = createContext<BombFinanceContext>({bombFinance: null});
 export const BombFinanceProvider: React.FC = ({children}) => {
   const {ethereum, account} = useWallet();
   const [bombFinance, setBombFinance] = useState<BombFinance>();
-  console.log(ethereum, account)
   useEffect(() => {
     if (!bombFinance) {
       const bomb = new BombFinance(config);
@@ -25,6 +24,5 @@ export const BombFinanceProvider: React.FC = ({children}) => {
       bombFinance.unlockWallet(ethereum, account);
     }
   }, [account, ethereum, bombFinance]);
-
   return <Context.Provider value={{bombFinance}}>{children}</Context.Provider>;
 };
