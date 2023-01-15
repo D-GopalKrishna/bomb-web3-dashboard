@@ -309,6 +309,7 @@ const styles = {
     text: {
         fontSize: '15px',
         marginTop: 0,
+        marginLeft: '6px',
     },
     RowFlex: {
         display: 'flex',

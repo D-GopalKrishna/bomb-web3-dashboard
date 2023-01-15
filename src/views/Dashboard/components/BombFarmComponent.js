@@ -6,24 +6,43 @@ import TokenSymbol from '../../../components/TokenSymbol';
 import theme from '../../../theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import useBank from '../../../hooks/useBank';
+import useStakeToBomb from '../../../hooks/useStakeToBomb';
+import useEarnings from '../../../hooks/useEarnings';
+import useHarvest from '../../../hooks/useHarvest';
+import {getDisplayBalance} from '../../../utils/formatBalance';
+import useStakedBalance from '../../../hooks/useStakedBalance';
+import useBombFinance from '../../../hooks/useBombFinance';
+
 
 const BombFarmComponent = () => {
     const [banks] = useBanks();
     const bombStats = useBombStats();
     const { path } = useRouteMatch();
-    // console.log("banks", banks)
+    const bombFinance = useBombFinance()
+    console.log("bombFinance", bombFinance)
   
-  
-    // const bombBTCB_Id = "BombBtcbLPBShareRewardPool"
-    // const bankBOMBBTCB = useBank(bombBTCB_Id);
-    // console.log("bankBOMBBTCB", bankBOMBBTCB)
-    // let statsOnPool = useStakeToBomb(bankBOMBBTCB);
-    // console.log("statsOnPool", Number(statsOnPool))
-  
-  
-  
-    // const bank = useBank(bankId);
-    // let statsOnPool = useStakeToBomb(bank);  
+    const tokenPriceInDollars = useMemo(() => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
+        [bombStats],
+    );
+
+    // BTC Earnings and Stake
+    const bombBTCB_Id = "BombBtcbLPBShareRewardPool"
+    const bankBOMBBTCB = useBank(bombBTCB_Id);
+    const BTCearnings = useEarnings(bankBOMBBTCB?.contract, bankBOMBBTCB?.earnTokenName, bankBOMBBTCB?.poolId);
+    const BTCearnedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(BTCearnings))).toFixed(2);
+    const BTCstake = useStakedBalance(bankBOMBBTCB?.contract, bankBOMBBTCB?.poolId);
+    const BTCstakeInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(BTCstake))).toFixed(2);
+    
+
+    // BNB Earnings and Stake
+    const bShareBNB_Id = "BombBshareLPBShareRewardPool"
+    const bankBShareBNB = useBank(bShareBNB_Id);
+    const BNBearnings = useEarnings(bankBShareBNB?.contract, bankBShareBNB?.earnTokenName, bankBShareBNB?.poolId);
+    const BNBearnedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(BNBearnings))).toFixed(2);
+    const BNBstake = useStakedBalance(bankBShareBNB?.contract, bankBShareBNB?.poolId);
+    const BNBstakeInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(BNBstake))).toFixed(2);
+    
 
     return (
         <div style={styles.container}>
@@ -50,24 +69,24 @@ const BombFarmComponent = () => {
             <div style={styles.StatsBtnContainer}>
                 <div style={styles.StatsContainer}>
                     <div>
-                        <p style={styles.text}>Daily Returns:</p>
+                        <p style={styles.textDaily}>Daily Returns:</p>
                         <p style={styles.Title}>2%</p>
                     </div>
                     <div>
                         <p style={styles.text}>Your Stake:</p>
                         <div style={styles.FlexRowStyle}>
                             <TokenSymbol size={20} symbol={'BOMB-BTCB-LP'} />
-                            <p style={styles.text}>123123</p>
+                            <p style={styles.text}>{Number(BTCstake)}</p>
                         </div>
-                        <p style={styles.text}>≈ $12213</p>
+                        <p style={styles.text}>≈ ${BTCearnedInDollars}</p>
                     </div>
                     <div>
                         <p style={styles.text}>Earned:</p>
                         <div style={styles.FlexRowStyle}>
                             <TokenSymbol size={20} symbol={'BOMB-BTCB-LP'} />
-                            <p style={styles.text}>123123</p>
+                            <p style={styles.text}>{Number(BTCearnings)}</p>
                         </div>
-                        <p style={styles.text}>≈ $12213</p>
+                        <p style={styles.text}>≈ ${BTCstakeInDollars}</p>
                     </div>
                 </div>
                 <div style={styles.BtnContainer}>
@@ -91,7 +110,7 @@ const BombFarmComponent = () => {
             <div style={styles.EachTitleComponent}>
                 <div style={styles.EachTitleLeft}>
                     <TokenSymbol size={32} symbol={'BOMB-BTCB-LP'} />
-                    <p style={styles.FarmTitleText}>BOMB_BTCB</p>
+                    <p style={styles.FarmTitleText}>BSHARE-BNB</p>
                     <p style={styles.RecommendedStyle}>Recommended</p>
                 </div>
                 <p style={styles.text}>TVL: $123123</p>
@@ -100,24 +119,24 @@ const BombFarmComponent = () => {
             <div style={styles.StatsBtnContainer}>
                 <div style={styles.StatsContainer}>
                     <div>
-                        <p style={styles.text}>Daily Returns:</p>
+                        <p style={styles.textDaily}>Daily Returns:</p>
                         <p style={styles.Title}>2%</p>
                     </div>
                     <div>
                         <p style={styles.text}>Your Stake:</p>
                         <div style={styles.FlexRowStyle}>
                             <TokenSymbol size={20} symbol={'BOMB-BTCB-LP'} />
-                            <p style={styles.text}>123123</p>
+                            <p style={styles.text}>{Number(BNBstake)}</p>
                         </div>
-                        <p style={styles.text}>≈ $12213</p>
+                        <p style={styles.text}>≈ ${BNBstakeInDollars}</p>
                     </div>
                     <div>
                         <p style={styles.text}>Earned:</p>
                         <div style={styles.FlexRowStyle}>
                             <TokenSymbol size={20} symbol={'BOMB-BTCB-LP'} />
-                            <p style={styles.text}>123123</p>
+                            <p style={styles.text}>{Number(BNBearnings)}</p>
                         </div>
-                        <p style={styles.text}>≈ $12213</p>
+                        <p style={styles.text}>≈ ${BNBearnedInDollars}</p>
                     </div>
                 </div>
                 <div style={styles.BtnContainer}>
@@ -164,6 +183,11 @@ const styles = {
         marginBottom: '-6px',
     },
     text: {
+        fontSize: '15px',
+        marginTop: '0px',
+        marginLeft: '6px',
+    },
+    textDaily: {
         fontSize: '15px',
         marginTop: '0px',
     },

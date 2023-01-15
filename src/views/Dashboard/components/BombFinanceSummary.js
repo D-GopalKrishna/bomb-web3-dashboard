@@ -61,7 +61,6 @@ const BombFinanceSummary = () => {
     );
     const tBondTotalSupply = useMemo(() => (tBondStats ? String(tBondStats.totalSupply) : null), [tBondStats]);
 
-    console.log(TVL)
     return (
         <div style={styles.container}>
             <h1 style={styles.Title}>Bomb Finance Summary</h1>

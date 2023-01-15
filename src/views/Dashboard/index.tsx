@@ -25,22 +25,7 @@ const BackgroundImage = createGlobalStyle`
 const TITLE = 'bomb.money | Dashboard';
 
 const Dashboard = () => {
-
-
-
-
-
   return (
-    // <Switch>
-    //   <Page>
-    //     <Route exact path={path}>
-    //       <BackgroundImage />
-    //       <Helmet>
-    //         <title>{TITLE}</title>
-    //       </Helmet>
-    //     </Route>
-    //   </Page>
-    // </Switch>
     <div>
       <Helmet>
         <title>{TITLE}</title>
