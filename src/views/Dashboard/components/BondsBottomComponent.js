@@ -41,7 +41,7 @@ const BondsBottomComponent = () => {
         },
         [bombFinance, addTransaction],
     );
-    const bondsPurchasable = useBondsPurchasable();
+    
 
     console.log('cashPrice', cashPrice.toString())
     const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
@@ -66,7 +66,8 @@ const BondsBottomComponent = () => {
                     <p style={styles.text}>Available to redeem:</p>
                     <div style={styles.RedeemSymbol}>
                         <TokenSymbol size={32} symbol={'BBOND'} />
-                        <p style={styles.redeemText}>{Number(cashPrice.gt(BOND_REDEEM_PRICE_BN))}</p>
+                        <p style={styles.redeemText}>{!isBondPurchasable ? 'BOMB is over peg'
+                            : getDisplayBalance(bondsPurchasable, 18, 4)}</p>
                     </div>
                 </div>
                 <div style={styles.BtnContainer}>
