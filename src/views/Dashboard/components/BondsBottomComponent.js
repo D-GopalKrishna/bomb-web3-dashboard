@@ -154,6 +154,10 @@ const styles = {
         fontSize: '35px',
         marginTop: '0px',
         marginLeft: '10px',
+        // wrap text if too long
+        width: '80%',
+        wordWrap: 'break-word',
+
     },
     EachBtn: {
         display: 'flex',

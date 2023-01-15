@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, { useMemo } from 'react'
 import TokenSymbol from '../../../components/TokenSymbol';
 import useBombStats from '../../../hooks/useBombStats';
 import useBondStats from '../../../hooks/useBondStats';
@@ -12,31 +12,56 @@ import useTotalValueLocked from '../../../hooks/useTotalValueLocked';
 import moment from 'moment';
 import theme from '../../../theme';
 import MetaMaskLogo from '../../../assets/img/MetaMask.png';
+import useLpStats from '../../../hooks/useLpStats';
+import useLpStatsBTC from '../../../hooks/useLpStatsBTC';
+
 
 const BombFinanceSummary = () => {
-
-
-    const bombStats = useBombStats();
-    const bondStats = useBondStats();
-    const bshareStats = usebShareStats();
-    const currentEpoch = useCurrentEpoch()
-    const { to } = useTreasuryAllocationTimes();
     const estimatedTWAP = useCashPriceInEstimatedTWAP()
     const estimatedTWAPPriceDollar = useMemo(() => (estimatedTWAP ? Number(estimatedTWAP.priceInDollars).toFixed(4) : null), [estimatedTWAP]);
-    const TVL = useTotalValueLocked();
+    const currentEpoch = useCurrentEpoch()
+    const { to } = useTreasuryAllocationTimes();
+
     const lastTWAP = useCashPriceInLastTWAP()
+    const TVL = useTotalValueLocked();
+    const bombStats = useBombStats();
+    const bShareStats = usebShareStats();
+    const tBondStats = useBondStats();
 
+    const bombPriceInDollars = useMemo(
+        () => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
+        [bombStats],
+    );
+    const bombPriceInBNB = useMemo(() => (bombStats ? Number(bombStats.tokenInFtm).toFixed(4) : null), [bombStats]);
+    const bombCirculatingSupply = useMemo(() => (bombStats ? String(bombStats.circulatingSupply) : null), [bombStats]);
+    const bombTotalSupply = useMemo(() => (bombStats ? String(bombStats.totalSupply) : null), [bombStats]);
 
-    // console.log("bombStats", bombStats)
-    // console.log("bondStats", bondStats)
-    // console.log("bshareStats", bshareStats)
-    // console.log("currentEpoch", Number(currentEpoch))
-    // console.log("to", to)
-    // console.log("estimatedTWAPPriceDollar", estimatedTWAPPriceDollar)
-    // console.log("TVL", TVL)
-    // console.log("lastTWAP", Number(lastTWAP))
+    const bSharePriceInDollars = useMemo(
+        () => (bShareStats ? Number(bShareStats.priceInDollars).toFixed(2) : null),
+        [bShareStats],
+    );
+    const bSharePriceInBNB = useMemo(
+        () => (bShareStats ? Number(bShareStats.tokenInFtm).toFixed(4) : null),
+        [bShareStats],
+    );
+    const bShareCirculatingSupply = useMemo(
+        () => (bShareStats ? String(bShareStats.circulatingSupply) : null),
+        [bShareStats],
+    );
+    const bShareTotalSupply = useMemo(() => (bShareStats ? String(bShareStats.totalSupply) : null), [bShareStats]);
 
+    const tBondPriceInDollars = useMemo(
+        () => (tBondStats ? Number(tBondStats.priceInDollars).toFixed(2) : null),
+        [tBondStats],
+    );
+    const tBondPriceInBNB = useMemo(() => (tBondStats ? Number(tBondStats.tokenInFtm).toFixed(4) : null), [tBondStats]);
+    const tBondCirculatingSupply = useMemo(
+        () => (tBondStats ? String(tBondStats.circulatingSupply) : null),
+        [tBondStats],
+    );
+    const tBondTotalSupply = useMemo(() => (tBondStats ? String(tBondStats.totalSupply) : null), [tBondStats]);
 
+    console.log(TVL)
     return (
         <div style={styles.container}>
             <h1 style={styles.Title}>Bomb Finance Summary</h1>
@@ -54,44 +79,44 @@ const BombFinanceSummary = () => {
                             <TokenSymbol size={22} symbol={'BOMB-BTCB-APELP'} />
                             <p style={styles.text}>$BOMB</p>
                         </div>
-                        <p style={styles.SecondCol}>8.66M</p>
-                        <p style={styles.ThirdCol}>10.00M</p>
+                        <p style={styles.SecondCol}>{bombCirculatingSupply ? bombCirculatingSupply : 0}</p>
+                        <p style={styles.ThirdCol}>{bombTotalSupply ? bombTotalSupply : 0}</p>
                         <div style={styles.FourthCol}>
-                            <p>$0.24</p>
-                            <p>1.05 BTCB</p>
+                            <p>${bombPriceInDollars ? bombPriceInDollars : 0}</p>
+                            <p>{bombPriceInBNB ? bombPriceInBNB : 0} BTCB</p>
                         </div>
                         <div style={styles.FifthCol}>
-                            <img style={{width: 40, marginTop: 10}} src={MetaMaskLogo} alt={"Metamask Logo"} />
+                            <img style={{ width: 40, marginTop: 10 }} src={MetaMaskLogo} alt={"Metamask Logo"} />
                         </div>
                     </div>
                     <div style={styles.EachRoww}>
                         <div style={styles.FirstCol}>
                             <TokenSymbol size={22} symbol={'BOMB-BTCB-APELP'} />
-                            <p style={styles.text}>$BOMB</p>
+                            <p style={styles.text}>$BSHARE</p>
                         </div>
-                        <p style={styles.SecondCol}>8.66M</p>
-                        <p style={styles.ThirdCol}>10.00M</p>
+                        <p style={styles.SecondCol}>{bShareCirculatingSupply ? bShareCirculatingSupply : 0}</p>
+                        <p style={styles.ThirdCol}>{bShareTotalSupply ? bShareTotalSupply : 0}</p>
                         <div style={styles.FourthCol}>
-                            <p>$0.24</p>
-                            <p>1.05 BTCB</p>
+                            <p>${bSharePriceInDollars ? bSharePriceInDollars : 0}</p>
+                            <p>{bSharePriceInBNB ? bSharePriceInBNB : 0}BTCB</p>
                         </div>
                         <div style={styles.FifthCol}>
-                            <img style={{width: 40, marginTop: 20}} src={MetaMaskLogo} alt={"Metamask Logo"} />
+                            <img style={{ width: 40, marginTop: 20 }} src={MetaMaskLogo} alt={"Metamask Logo"} />
                         </div>
                     </div>
                     <div style={styles.EachRoww}>
                         <div style={styles.FirstCol}>
                             <TokenSymbol size={22} symbol={'BOMB-BTCB-APELP'} />
-                            <p style={styles.text}>$BOMB</p>
+                            <p style={styles.text}>$BBOND</p>
                         </div>
-                        <p style={styles.SecondCol}>8.66M</p>
-                        <p style={styles.ThirdCol}>10.00M</p>
+                        <p style={styles.SecondCol}>{tBondCirculatingSupply ? tBondCirculatingSupply : 0}</p>
+                        <p style={styles.ThirdCol}>{tBondTotalSupply ? tBondTotalSupply : 0}</p>
                         <div style={styles.FourthCol}>
-                            <p>$0.24</p>
-                            <p>1.05 BTCB</p>
+                            <p>${tBondPriceInDollars ? tBondPriceInDollars : 0}</p>
+                            <p>{tBondPriceInBNB ? tBondPriceInBNB : 0}BTCB</p>
                         </div>
                         <div style={styles.FifthCol}>
-                            <img style={{width: 40, marginTop: 20}} src={MetaMaskLogo} alt={"Metamask Logo"} />
+                            <img style={{ width: 40, marginTop: 20 }} src={MetaMaskLogo} alt={"Metamask Logo"} />
                         </div>
                     </div>
                 </div>
@@ -101,16 +126,16 @@ const BombFinanceSummary = () => {
                 <div style={styles.RightContainer}>
                     <div style={styles.EpochContainer}>
                         <p style={styles.smallTitleText}>Current Epoch</p>
-                        <p style={styles.BigText}>258</p>
+                        <p style={styles.BigText}>{Number(currentEpoch)}</p>
                     </div>
                     <div style={styles.CounterStyle}>
                         <ProgressCountdown base={moment().toDate()} hideBar={true} deadline={to} description="Next Epoch" />
                         <p style={styles.smallTitleText}>Next Epoch in</p>
                     </div>
                     <div>
-                        <p>Live TWAP: <text style={{color: "#00E8A2"}}>1.17</text></p>
-                        <p>TVL: <text style={{color: "#00E8A2"}}>$123123</text></p>
-                        <p>Last Epoch TWAP: <text style={{color: "#00E8A2"}}>1.22</text></p>
+                        <p>Live TWAP: <text style={{ color: "#00E8A2" }}>{estimatedTWAPPriceDollar ? estimatedTWAPPriceDollar : 0}</text></p>
+                        <p>TVL: <text style={{ color: "#00E8A2" }}>${TVL ? TVL : 0}</text></p>
+                        <p>Last Epoch TWAP: <text style={{ color: "#00E8A2" }}>{lastTWAP ? Number(lastTWAP) : 0}</text></p>
                     </div>
                 </div>
             </div>
@@ -127,7 +152,7 @@ export default BombFinanceSummary
 const styles = {
     container: {
         display: 'flex',
-        flexDirection: 'column',    
+        flexDirection: 'column',
         width: '80%',
         margin: '2% auto',
         height: '100%',
@@ -158,6 +183,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         marginTop: '20px',
+        maxWidth: '30%'
     },
     EpochContainer: {
         borderBottom: '1px solid #aaa',

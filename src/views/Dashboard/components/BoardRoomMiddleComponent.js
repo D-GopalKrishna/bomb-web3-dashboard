@@ -9,27 +9,33 @@ import useTotalStakedOnBoardroom from '../../../hooks/useTotalStakedOnBoardroom'
 import theme from '../../../theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import useXbombAPR from '../../../hooks/useXbombAPR';
+import { roundAndFormatNumber } from '../../../0x';
+import useClaimRewardCheck from '../../../hooks/boardroom/useClaimRewardCheck';
+import useWithdrawCheck from '../../../hooks/boardroom/useWithdrawCheck';
 
 const BoardRoomMiddleComponent = () => {
     const bombStats = useBombStats();
     const tokenPriceInDollars = useMemo(() => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
         [bombStats],
     );
-        
-    // const earnings = useEarningsOnBoardroom();
-    // console.log("earnings", Number(earnings))
-    // const earnedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(earnings))).toFixed(2);
-    // console.log("earningsInDollars", earnedInDollars)
-    // const stakedBalance = useStakedBalanceOnBoardroom();
-    // console.log("stakedBalance", Number(stakedBalance))
-    // const stakedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(stakedBalance))).toFixed(2);
-    // console.log("stakedInDollars", stakedInDollars)
-    // const boardroomAPR = useFetchBoardroomAPR();
-    // console.log("boardroomAPR", boardroomAPR.toFixed(2))
-    // const totalStaked = useTotalStakedOnBoardroom();
-    // console.log("totalStaked", Number(totalStaked))
+    const stakedBalance = useStakedBalanceOnBoardroom();
+    const stakedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(stakedBalance))).toFixed(2);
+    const earnings = useEarningsOnBoardroom();
+    const earnedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(earnings))).toFixed(2);
+    const boardroomAPR = useFetchBoardroomAPR();
+    const totalStaked = useTotalStakedOnBoardroom();
     
-
+    const xbombAPR = useXbombAPR();
+    const xbombTVL = useMemo(() => (xbombAPR ? Number(xbombAPR.TVL).toFixed(0) : null), [xbombAPR]);
+    const canClaimReward = useClaimRewardCheck();
+    const canWithdraw = useWithdrawCheck();
+    // console.log("earnings", Number(earnings))
+    // console.log("earningsInDollars", earnedInDollars)
+    // console.log("stakedBalance", Number(stakedBalance))
+    // console.log("stakedInDollars", stakedInDollars)
+    // console.log("boardroomAPR", boardroomAPR.toFixed(2))
+    // console.log("totalStaked", Number(totalStaked))
     return (
         <div style={styles.container}>
             <div style={styles.LeftContainer}>
@@ -59,12 +65,12 @@ const BoardRoomMiddleComponent = () => {
                                 <p style={styles.text}>Stake BSHARE and earn BOMB every epoch</p>
                             </div>
                         </div>
-                        <p style={styles.text}>TVL: $123123</p>
+                        <p style={styles.text}>TVL: ${roundAndFormatNumber(xbombTVL, 2)}</p>
                     </div>
                     <hr />
                     <div>
                         <div style={styles.TotalStacked}>
-                            <p style={styles.text}>123123</p>
+                            <p style={styles.text}>{getDisplayBalance(totalStaked)}</p>
                             <TokenSymbol size={20} symbol={'BBOND'}  />
                             <p style={styles.text}>Total Staked:</p>
                         </div>
@@ -73,23 +79,23 @@ const BoardRoomMiddleComponent = () => {
                         <div style={styles.InfoContainer}>
                             <div>
                                 <p>Daily Returns:</p>
-                                <p style={styles.BigText}>2%</p>
+                                <p style={styles.BigText}>{boardroomAPR ? boardroomAPR.toFixed(2) : 0}%</p>
                             </div>
                             <div>
                                 <p>Your Stake:</p>
                                 <div style={styles.IconWithText}>
                                     <TokenSymbol size={20} symbol={'BBOND'}  />
-                                    <p style={styles.text}>123123</p>
+                                    <p style={styles.text}>{stakedBalance ? Number(stakedBalance) : 0}</p>
                                 </div>
-                                <p style={styles.text}>≈ $12213</p>
+                                <p style={styles.text}>≈ ${stakedInDollars ? stakedInDollars : 0}</p>
                             </div>
                             <div>
                                 <p>Earned:</p>
                                 <div style={styles.IconWithText}>
                                     <TokenSymbol size={20} symbol={'BBOND'}  />
-                                    <p style={styles.text}>123123</p>
+                                    <p style={styles.text}>{earnings ? Number(earnings) : 0}</p>
                                 </div>
-                                <p style={styles.text}>≈ $12213</p>
+                                <p style={styles.text}>≈ ${earnedInDollars ? earnedInDollars : 0}</p>
                             </div>
                         </div>
                         <div style={styles.BtnContainer}>
@@ -98,16 +104,20 @@ const BoardRoomMiddleComponent = () => {
                                     <p style={styles.BtnText}>Deposit</p>
                                     <FontAwesomeIcon icon={faArrowUp} style={{}} />
                                 </button>
-                                <button style={styles.BtnStyle}>
-                                    <p style={styles.BtnText}>Withdraw</p>
-                                    <FontAwesomeIcon icon={faArrowDown} style={{}} />
-                                </button>
+                                <div style={{width: '48%', opacity: canWithdraw ? 1 : 0.5}}>
+                                    <button style={styles.BtnInsideStyle}>
+                                        <p style={styles.BtnText}>Withdraw</p>
+                                        <FontAwesomeIcon icon={faArrowDown} style={{}} />
+                                    </button>
+                                </div>
                             </div>
                             <div style={styles.RowBtn}>
-                                <button style={styles.RewardContainer}>
-                                    <p style={styles.BtnText}>Claim Rewards</p>
-                                    <TokenSymbol size={20} symbol={'BOMB-BTCB-APELP'} />
-                                </button>
+                                <div style={{width: '100%', opacity: canClaimReward ? 1 : 0.5}}>
+                                    <button style={styles.RewardContainer}>
+                                        <p style={styles.BtnText}>Claim Rewards</p>
+                                        <TokenSymbol size={20} symbol={'BOMB-BTCB-APELP'} />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -213,6 +223,21 @@ const styles = {
         alignItems: 'center',
         margin: 0,
         width: '48%',
+    },
+    BtnInsideStyle: {
+        borderColor: theme.bombFinanceColors.btnBorder,
+        backgroundColor: 'transparent',
+        color: theme.bombFinanceColors.text,
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderRadius: '20px',
+        padding: '10px 12px',
+        height: '40px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        margin: 0,
+        width: '100%',
     },
     BtnText: {
         marginRight: '5px',
