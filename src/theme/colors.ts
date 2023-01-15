@@ -48,7 +48,7 @@ export const newNavy = {
 
 export const bombFinanceColors={
   'cardBorder': '#728CDF',
-  'cardBg': '#23284B',
+  'cardBg': 'rgba(35, 40, 75, 0.75)',
   'text': '#FFFFFF',
   'btnBorder': '#FFF',
 }

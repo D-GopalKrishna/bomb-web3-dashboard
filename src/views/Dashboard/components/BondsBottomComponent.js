@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo, useCallback} from 'react';
 import useBombFinance from '../../../hooks/useBombFinance';
 import TokenSymbol from '../../../components/TokenSymbol';
 import useBondsPurchasable from '../../../hooks/useBondsPurchasable';
@@ -7,16 +7,21 @@ import theme from '../../../theme';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import useCashPriceInLastTWAP from '../../../hooks/useCashPriceInLastTWAP';
+import {useTransactionAdder} from '../../../state/transactions/hooks';
+import ExchangeStat from '../../Bond/components/ExchangeStat';
+import {getDisplayBalance} from '../../../utils/formatBalance';
+import useBondStats from '../../../hooks/useBondStats';
+import { BOND_REDEEM_PRICE, BOND_REDEEM_PRICE_BN } from '../../../bomb-finance/constants';
+
 
 const BondsBottomComponent = () => {
-    const bombFinance = useBombFinance();
-    const bondsPurchasable = useBondsPurchasable();
-    const bondBalance = useTokenBalance(bombFinance?.BBOND);
-  
+
+
     return (
         <div style={styles.container}>
             <div style={styles.heading}>
-                <TokenSymbol size={40} symbol={'BBOND'}  />
+                <TokenSymbol size={40} symbol={'BBOND'} />
                 <div style={styles.marginAdjustTitle}>
                     <p style={styles.Title}>Bonds</p>
                     <p style={styles.text}>BBOND can be purchased only on contraction periods, when TWAP of BOMB is below 1</p>
@@ -26,13 +31,13 @@ const BondsBottomComponent = () => {
             <div style={styles.FlexContainerBot}>
                 <div style={styles.CurrentPriceContainer}>
                     <p style={styles.text}>Current Price: (Bomb)^2</p>
-                    <p style={styles.Title}>BBond = 6.3423 BTCB</p>
+                    <p style={styles.Title}>BBond = {Number(bondBalance)} BTCB</p>
                 </div>
                 <div style={styles.RedeemContainer}>
                     <p style={styles.text}>Available to redeem:</p>
                     <div style={styles.RedeemSymbol}>
-                        <TokenSymbol size={32} symbol={'BBOND'}  />
-                        <p style={styles.redeemText}>123123</p>
+                        <TokenSymbol size={32} symbol={'BBOND'} />
+                        <p style={styles.redeemText}>{Number(bondsPurchasable)}</p>
                     </div>
                 </div>
                 <div style={styles.BtnContainer}>
@@ -41,37 +46,39 @@ const BondsBottomComponent = () => {
                             <p>Purchase BBond</p>
                             <p>Bomb is over peg</p>
                         </div>
-                        <button style={styles.BtnStyle}>
-                            <p style={styles.BtnText}>Purchase</p>
-                            <FontAwesomeIcon icon={faShoppingCart} style={{}} />
-                        </button>
+                        <div style={{opacity: (isBondPurchasable ? 1 : 0.5)}}>
+                            <button style={styles.BtnStyle} onClick={() => handleBuyBonds()}>
+                                <p style={styles.BtnText}>Purchase</p>
+                                <FontAwesomeIcon icon={faShoppingCart} style={{}} />
+                            </button>
+                        </div>
                     </div>
                     <hr />
                     <div style={styles.EachBtn}>
                         <div>
                             <p>Purchase BBond</p>
                         </div>
-                        <button style={styles.BtnStyle}>
-                            <p style={styles.BtnText}>Redeem</p>
-                            <FontAwesomeIcon icon={faArrowDown} style={{}} />
-                        </button>
+                        <div style={{opacity: (isBondRedeemable ? 1 : 0.5)}}>
+                            <button style={styles.BtnStyle} onClick={() => handleRedeemBonds()}>
+                                <p style={styles.BtnText}>Redeem</p>
+                                <FontAwesomeIcon icon={faArrowDown} style={{}} />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
-    )
-}
+    );
+};
 
-export default BondsBottomComponent
+export default BondsBottomComponent;
 
 const styles = {
     container: {
         display: 'flex',
-        flexDirection: 'column',    
+        flexDirection: 'column',
         width: '80%',
-        margin: '5% auto',
+        margin: '2% auto',
         height: '100%',
         backgroundColor: theme.bombFinanceColors.cardBg,
         borderColor: theme.bombFinanceColors.cardBorder,
@@ -81,7 +88,7 @@ const styles = {
         padding: '20px 40px',
         color: theme.bombFinanceColors.text,
     },
-    Title:{ 
+    Title: {
         fontSize: '25px',
         marginBottom: '-6px',
     },
@@ -105,12 +112,12 @@ const styles = {
     RedeemContainer: {
         width: '24%',
     },
-    BtnContainer:{
+    BtnContainer: {
         width: '43%',
     },
     RedeemSymbol: {
         display: 'flex',
-    }, 
+    },
     redeemText: {
         fontSize: '35px',
         marginTop: '0px',
@@ -138,5 +145,5 @@ const styles = {
     },
     BtnText: {
         marginRight: '5px',
-    }
-}
+    },
+};

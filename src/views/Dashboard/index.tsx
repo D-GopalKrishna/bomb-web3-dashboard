@@ -9,6 +9,8 @@ import useBombStats from '../../hooks/useBombStats';
 import ColorsOnTopology from '../../assets/img/ColorsOnTopology.png';
 import BondsBottomComponent from './components/BondsBottomComponent';
 import BombFarmComponent from './components/BombFarmComponent';
+import BombFinanceSummary from './components/BombFinanceSummary';
+import BoardRoomMiddleComponent from './components/BoardRoomMiddleComponent';
 
 const BackgroundImage = createGlobalStyle`
   body {
@@ -44,6 +46,8 @@ const Dashboard = () => {
         <title>{TITLE}</title>
       </Helmet>
       <BackgroundImage />
+      <BombFinanceSummary />
+      <BoardRoomMiddleComponent />
       <BombFarmComponent />
       <BondsBottomComponent />
     </div>
