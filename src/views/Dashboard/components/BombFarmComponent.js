@@ -83,7 +83,7 @@ const BombFarmComponent = () => {
                     <div>
                         <p style={styles.text}>Earned:</p>
                         <div style={styles.FlexRowStyle}>
-                            <TokenSymbol size={20} symbol={'BOMB-BTCB-LP'} />
+                            <TokenSymbol size={20} symbol={'BTCB'} />
                             <p style={styles.text}>{Number(BTCearnings)}</p>
                         </div>
                         <p style={styles.text}>≈ ${BTCstakeInDollars}</p>
@@ -100,7 +100,7 @@ const BombFarmComponent = () => {
                     </button>
                     <button style={styles.BtnStyle}>
                         <p style={styles.BtnText}>Claim Rewards</p>
-                        <TokenSymbol size={20} symbol={'BOMB-BTCB-APELP'} />
+                        <TokenSymbol size={20} symbol={'BTCB'} />
                     </button>
                 </div>
             </div>
@@ -109,7 +109,7 @@ const BombFarmComponent = () => {
 
             <div style={styles.EachTitleComponent}>
                 <div style={styles.EachTitleLeft}>
-                    <TokenSymbol size={32} symbol={'BOMB-BTCB-LP'} />
+                    <TokenSymbol size={32} symbol={'BSHARE-BNB-APELP'} />
                     <p style={styles.FarmTitleText}>BSHARE-BNB</p>
                     <p style={styles.RecommendedStyle}>Recommended</p>
                 </div>
@@ -125,7 +125,7 @@ const BombFarmComponent = () => {
                     <div>
                         <p style={styles.text}>Your Stake:</p>
                         <div style={styles.FlexRowStyle}>
-                            <TokenSymbol size={20} symbol={'BOMB-BTCB-LP'} />
+                            <TokenSymbol size={20} symbol={'BSHARE-BNB-APELP'} />
                             <p style={styles.text}>{Number(BNBstake)}</p>
                         </div>
                         <p style={styles.text}>≈ ${BNBstakeInDollars}</p>
@@ -133,7 +133,7 @@ const BombFarmComponent = () => {
                     <div>
                         <p style={styles.text}>Earned:</p>
                         <div style={styles.FlexRowStyle}>
-                            <TokenSymbol size={20} symbol={'BOMB-BTCB-LP'} />
+                            <TokenSymbol size={20} symbol={'WBNB'} />
                             <p style={styles.text}>{Number(BNBearnings)}</p>
                         </div>
                         <p style={styles.text}>≈ ${BNBearnedInDollars}</p>
@@ -150,7 +150,7 @@ const BombFarmComponent = () => {
                     </button>
                     <button style={styles.BtnStyle}>
                         <p style={styles.BtnText}>Claim Rewards</p>
-                        <TokenSymbol size={20} symbol={'BOMB-BTCB-APELP'} />
+                        <TokenSymbol size={20} symbol={'WBNB'} />
                     </button>
                 </div>
             </div>

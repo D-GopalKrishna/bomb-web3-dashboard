@@ -12,9 +12,6 @@ import useTotalValueLocked from '../../../hooks/useTotalValueLocked';
 import moment from 'moment';
 import theme from '../../../theme';
 import MetaMaskLogo from '../../../assets/img/MetaMask.png';
-import useLpStats from '../../../hooks/useLpStats';
-import useLpStatsBTC from '../../../hooks/useLpStatsBTC';
-
 
 const BombFinanceSummary = () => {
     const estimatedTWAP = useCashPriceInEstimatedTWAP()
@@ -75,7 +72,7 @@ const BombFinanceSummary = () => {
                     </div>
                     <div style={styles.EachRoww}>
                         <div style={styles.FirstCol}>
-                            <TokenSymbol size={22} symbol={'BOMB-BTCB-APELP'} />
+                            <TokenSymbol size={22} symbol={'BOMB'} />
                             <p style={styles.text}>$BOMB</p>
                         </div>
                         <p style={styles.SecondCol}>{bombCirculatingSupply ? bombCirculatingSupply : 0}</p>
@@ -90,7 +87,7 @@ const BombFinanceSummary = () => {
                     </div>
                     <div style={styles.EachRoww}>
                         <div style={styles.FirstCol}>
-                            <TokenSymbol size={22} symbol={'BOMB-BTCB-APELP'} />
+                            <TokenSymbol size={22} symbol={'BSHARE'} />
                             <p style={styles.text}>$BSHARE</p>
                         </div>
                         <p style={styles.SecondCol}>{bShareCirculatingSupply ? bShareCirculatingSupply : 0}</p>
@@ -105,7 +102,7 @@ const BombFinanceSummary = () => {
                     </div>
                     <div style={styles.EachRoww}>
                         <div style={styles.FirstCol}>
-                            <TokenSymbol size={22} symbol={'BOMB-BTCB-APELP'} />
+                            <TokenSymbol size={22} symbol={'BBOND'} />
                             <p style={styles.text}>$BBOND</p>
                         </div>
                         <p style={styles.SecondCol}>{tBondCirculatingSupply ? tBondCirculatingSupply : 0}</p>
@@ -133,7 +130,7 @@ const BombFinanceSummary = () => {
                     </div>
                     <div>
                         <p>Live TWAP: <text style={{ color: "#00E8A2" }}>{estimatedTWAPPriceDollar ? estimatedTWAPPriceDollar : 0}</text></p>
-                        <p>TVL: <text style={{ color: "#00E8A2" }}>${TVL ? TVL : 0}</text></p>
+                        <p>TVL: <text style={{ color: "#00E8A2" }}>${TVL ? Math.floor(TVL) : 0}</text></p>
                         <p>Last Epoch TWAP: <text style={{ color: "#00E8A2" }}>{lastTWAP ? Number(lastTWAP) : 0}</text></p>
                     </div>
                 </div>

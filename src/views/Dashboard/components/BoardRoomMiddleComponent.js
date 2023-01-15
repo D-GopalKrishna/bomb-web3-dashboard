@@ -56,7 +56,7 @@ const BoardRoomMiddleComponent = () => {
                 <div style={styles.BoardTitleContainer}>
                     <div style={styles.EachTitleComponent}>
                         <div style={styles.RowFlex}>
-                            <TokenSymbol size={32} symbol={'BOMB-BTCB-LP'} />
+                            <TokenSymbol size={32} symbol={'BSHARE'} />
                             <div style={styles.EachTitleLeft}>
                                 <div style={styles.FarmTitleText}>
                                     <p style={styles.BigText}>Boardroom</p>
@@ -71,7 +71,7 @@ const BoardRoomMiddleComponent = () => {
                     <div>
                         <div style={styles.TotalStacked}>
                             <p style={styles.text}>{getDisplayBalance(totalStaked)}</p>
-                            <TokenSymbol size={20} symbol={'BBOND'}  />
+                            <TokenSymbol size={20} symbol={'BSHARE'}  />
                             <p style={styles.text}>Total Staked:</p>
                         </div>
                     </div>
@@ -84,7 +84,7 @@ const BoardRoomMiddleComponent = () => {
                             <div>
                                 <p>Your Stake:</p>
                                 <div style={styles.IconWithText}>
-                                    <TokenSymbol size={20} symbol={'BBOND'}  />
+                                    <TokenSymbol size={20} symbol={'BSHARE'}  />
                                     <p style={styles.text}>{stakedBalance ? Number(stakedBalance) : 0}</p>
                                 </div>
                                 <p style={styles.text}>≈ ${stakedInDollars ? stakedInDollars : 0}</p>
@@ -92,7 +92,7 @@ const BoardRoomMiddleComponent = () => {
                             <div>
                                 <p>Earned:</p>
                                 <div style={styles.IconWithText}>
-                                    <TokenSymbol size={20} symbol={'BBOND'}  />
+                                    <TokenSymbol size={20} symbol={'BOMB'}  />
                                     <p style={styles.text}>{earnings ? Number(earnings) : 0}</p>
                                 </div>
                                 <p style={styles.text}>≈ ${earnedInDollars ? earnedInDollars : 0}</p>
@@ -115,7 +115,7 @@ const BoardRoomMiddleComponent = () => {
                                 <div style={{width: '100%', opacity: canClaimReward ? 1 : 0.5}}>
                                     <button style={styles.RewardContainer}>
                                         <p style={styles.BtnText}>Claim Rewards</p>
-                                        <TokenSymbol size={20} symbol={'BOMB-BTCB-APELP'} />
+                                        <TokenSymbol size={20} symbol={'BSHARE'} />
                                     </button>
                                 </div>
                             </div>

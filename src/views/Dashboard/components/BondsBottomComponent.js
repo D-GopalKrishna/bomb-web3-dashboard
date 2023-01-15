@@ -41,15 +41,12 @@ const BondsBottomComponent = () => {
         },
         [bombFinance, addTransaction],
     );
+    const bondsPurchasable = useBondsPurchasable();
+
+    console.log('cashPrice', cashPrice.toString())
     const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
     const isBondPurchasable = useMemo(() => Number(bondStat?.tokenInFtm) < 1.01, [bondStat]);
-    const isBondPayingPremium = useMemo(() => Number(bondStat?.tokenInFtm) >= 1.1, [bondStat]);
-    const bondScale = (Number(cashPrice) / 100000000000000).toFixed(4);
 
-    // console.log('bondsPurchasable', Number(bondsPurchasable));
-    // console.log('bondBalance', Number(bondBalance));
-    // console.log('bondStat', bondStat);
-    
     return (
         <div style={styles.container}>
             <div style={styles.heading}>
@@ -69,7 +66,7 @@ const BondsBottomComponent = () => {
                     <p style={styles.text}>Available to redeem:</p>
                     <div style={styles.RedeemSymbol}>
                         <TokenSymbol size={32} symbol={'BBOND'} />
-                        <p style={styles.redeemText}>{Number(bondsPurchasable)}</p>
+                        <p style={styles.redeemText}>{Number(cashPrice.gt(BOND_REDEEM_PRICE_BN))}</p>
                     </div>
                 </div>
                 <div style={styles.BtnContainer}>

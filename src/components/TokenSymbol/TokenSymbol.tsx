@@ -46,7 +46,7 @@ const logosBySymbol: {[title: string]: string} = {
   'BUSM-BUSD-LP': busmBusdLpLogo,
 
   'BSHARE-BNB-LP': bshareFtmLpLogo,
-    '80BSHARE-20WBNB-LP': bshareFtmLpLogo,
+  '80BSHARE-20WBNB-LP': bshareFtmLpLogo,
   'BSHARE-BNB-APELP': bshareFtmLpLogo,
   'BOMB-BTCB-APELP': bombFtmLpLogo,
 };
