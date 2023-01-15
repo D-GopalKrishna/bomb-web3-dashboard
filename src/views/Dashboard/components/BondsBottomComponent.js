@@ -17,7 +17,39 @@ import { BOND_REDEEM_PRICE, BOND_REDEEM_PRICE_BN } from '../../../bomb-finance/c
 
 const BondsBottomComponent = () => {
 
+    const bombFinance = useBombFinance();
+    const addTransaction = useTransactionAdder();
+    const bondStat = useBondStats();
+    const cashPrice = useCashPriceInLastTWAP();
+    const bondsPurchasable = useBondsPurchasable();
+    const bondBalance = useTokenBalance(bombFinance?.BBOND);
 
+    const handleBuyBonds = useCallback(
+        async (amount=1) => {
+            const tx = await bombFinance.buyBonds(amount);
+            addTransaction(tx, {
+                summary: `Buy ${Number(amount).toFixed(2)} BBOND with ${amount} BOMB`,
+            });
+        },
+        [bombFinance, addTransaction],
+    );
+
+    const handleRedeemBonds = useCallback(
+        async (amount=1) => {
+            const tx = await bombFinance.redeemBonds(amount);
+            addTransaction(tx, { summary: `Redeem ${amount} BBOND` });
+        },
+        [bombFinance, addTransaction],
+    );
+    const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
+    const isBondPurchasable = useMemo(() => Number(bondStat?.tokenInFtm) < 1.01, [bondStat]);
+    const isBondPayingPremium = useMemo(() => Number(bondStat?.tokenInFtm) >= 1.1, [bondStat]);
+    const bondScale = (Number(cashPrice) / 100000000000000).toFixed(4);
+
+    // console.log('bondsPurchasable', Number(bondsPurchasable));
+    // console.log('bondBalance', Number(bondBalance));
+    // console.log('bondStat', bondStat);
+    
     return (
         <div style={styles.container}>
             <div style={styles.heading}>
