@@ -5,6 +5,7 @@ import { createGlobalStyle } from 'styled-components';
 import useBanks from '../../hooks/useBanks';
 import { Helmet } from 'react-helmet';
 import useBombStats from '../../hooks/useBombStats';
+import Page from '../../components/Page';
 
 import ColorsOnTopology from '../../assets/img/ColorsOnTopology.png';
 import BondsBottomComponent from './components/BondsBottomComponent';
@@ -26,16 +27,16 @@ const TITLE = 'bomb.money | Dashboard';
 
 const Dashboard = () => {
   return (
-    <div>
-      <Helmet>
-        <title>{TITLE}</title>
-      </Helmet>
-      <BackgroundImage />
-      <BombFinanceSummary />
-      <BoardRoomMiddleComponent />
-      <BombFarmComponent />
-      <BondsBottomComponent />
-    </div>
+    <Page>
+        <Helmet>
+          <title>{TITLE}</title>
+        </Helmet>
+        <BackgroundImage />
+        <BombFinanceSummary />
+        <BoardRoomMiddleComponent />
+        <BombFarmComponent />
+        <BondsBottomComponent />
+    </Page>
   );
 };
 

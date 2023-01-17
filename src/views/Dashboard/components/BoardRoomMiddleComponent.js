@@ -178,7 +178,7 @@ const BoardRoomMiddleComponent = () => {
                                 <div style={{ width: '48%', opacity: canWithdraw ? 1 : 0.5 }}>
                                     <button
                                         style={styles.BtnInsideStyle}
-                                        onClick={onPresentWithdraw}
+                                        onClick={canWithdraw ? onPresentWithdraw : ()=>{}}
                                     >
                                         <p style={styles.BtnText}>Withdraw</p>
                                         <FontAwesomeIcon icon={faArrowDown} style={{}} />
@@ -189,7 +189,7 @@ const BoardRoomMiddleComponent = () => {
                                 <div style={{ width: '100%', opacity: canClaimReward ? 1 : 0.5 }}>
                                     <button
                                         style={styles.RewardContainer}
-                                        onClick={canClaimReward ? onReward : console.log('no reward')}
+                                        onClick={canClaimReward ? onReward :  ()=>{}}
                                     >
                                         <p style={styles.BtnText}>Claim Rewards</p>
                                         <TokenSymbol size={20} symbol={'BSHARE'} />
@@ -214,7 +214,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'space-between',
         margin: '2% auto',
-        width: '84%',
+        width: '106%',
     },
     LeftContainer: {
         display: 'flex',

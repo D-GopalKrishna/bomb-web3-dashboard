@@ -46,8 +46,8 @@ const BondsBottomComponent = () => {
     
     const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
     const isBondPurchasable = useMemo(() => Number(bondStat?.tokenInFtm) < 1.01, [bondStat]);
-    const balanceBomb = useTokenBalance("BOMB");
-    const balanceBbond = useTokenBalance("BBOND");
+    const balanceBomb = useTokenBalance(bombFinance.BBOMB_BOMB);
+    const balanceBbond = useTokenBalance(bombFinance.BBOND);
 
     const [onPresentPurchase, onDismissPurchase] = useModal(
         <ExchangeModal
@@ -100,7 +100,7 @@ const BondsBottomComponent = () => {
                     <div style={styles.RedeemSymbol}>
                         <TokenSymbol size={32} symbol={'BBOND'} />
                         <p style={styles.redeemText}>{!isBondPurchasable ? 'BOMB is over peg'
-                            : getDisplayBalance(bondsPurchasable, 18, 4)}</p>
+                            : getDisplayBalance(bondBalance, 18, 4)}</p>
                     </div>
                 </div>
                 <div style={styles.BtnContainer}>
@@ -140,7 +140,7 @@ const styles = {
     container: {
         display: 'flex',
         flexDirection: 'column',
-        width: '80%',
+        width: '100%',
         margin: '2% auto',
         height: '100%',
         backgroundColor: theme.bombFinanceColors.cardBg,

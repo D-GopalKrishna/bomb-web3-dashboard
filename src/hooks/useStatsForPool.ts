@@ -6,7 +6,6 @@ import config from '../config';
 
 const useStatsForPool = (bank: Bank) => {
   const bombFinance = useBombFinance();
-
   const [poolAPRs, setPoolAPRs] = useState<PoolStats>();
 
   const fetchAPRsForPool = useCallback(async () => {

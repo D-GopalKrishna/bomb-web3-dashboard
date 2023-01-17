@@ -160,7 +160,7 @@ const styles = {
     container: {
         display: 'flex',
         flexDirection: 'column',
-        width: '80%',
+        width: '100%',
         margin: '2% auto',
         height: '100%',
         backgroundColor: theme.bombFinanceColors.cardBg,
@@ -254,9 +254,6 @@ const styles = {
         border: 'none',
         padding: '0px', 
         margin: '0px',
-        // remove all the button styles 
-        '-webkit-appearance': 'none',
-        '-moz-appearance': 'none',
         appearance: 'none',
         cursor: 'pointer',
         outline: 'none',

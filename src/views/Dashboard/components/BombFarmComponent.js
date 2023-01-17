@@ -13,6 +13,7 @@ import useHarvest from '../../../hooks/useHarvest';
 import {getDisplayBalance} from '../../../utils/formatBalance';
 import useStakedBalance from '../../../hooks/useStakedBalance';
 import useBombFinance from '../../../hooks/useBombFinance';
+import useStatsForPool from '../../../hooks/useStatsForPool';
 
 
 const BombFarmComponent = () => {
@@ -20,12 +21,10 @@ const BombFarmComponent = () => {
     const bombStats = useBombStats();
     const { path } = useRouteMatch();
     const bombFinance = useBombFinance()
-    console.log("bombFinance", bombFinance)
-  
+    // console.log(bombFinance)
     const tokenPriceInDollars = useMemo(() => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
         [bombStats],
     );
-
     // BTC Earnings and Stake
     const bombBTCB_Id = "BombBtcbLPBShareRewardPool"
     const bankBOMBBTCB = useBank(bombBTCB_Id);
@@ -33,16 +32,17 @@ const BombFarmComponent = () => {
     const BTCearnedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(BTCearnings))).toFixed(2);
     const BTCstake = useStakedBalance(bankBOMBBTCB?.contract, bankBOMBBTCB?.poolId);
     const BTCstakeInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(BTCstake))).toFixed(2);
-    
+    let btcstatsOnPool = useStatsForPool(bankBOMBBTCB);
+
 
     // BNB Earnings and Stake
-    const bShareBNB_Id = "BombBshareLPBShareRewardPool"
+    const bShareBNB_Id = "BshareBnbLPBShareRewardPool"
     const bankBShareBNB = useBank(bShareBNB_Id);
     const BNBearnings = useEarnings(bankBShareBNB?.contract, bankBShareBNB?.earnTokenName, bankBShareBNB?.poolId);
     const BNBearnedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(BNBearnings))).toFixed(2);
     const BNBstake = useStakedBalance(bankBShareBNB?.contract, bankBShareBNB?.poolId);
     const BNBstakeInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(BNBstake))).toFixed(2);
-    
+    let bnbstatsOnPool = useStatsForPool(bankBShareBNB);
 
     return (
         <div style={styles.container}>
@@ -63,14 +63,14 @@ const BombFarmComponent = () => {
                     <p style={styles.FarmTitleText}>BOMB_BTCB</p>
                     <p style={styles.RecommendedStyle}>Recommended</p>
                 </div>
-                <p style={styles.text}>TVL: $123123</p>
+                <p style={styles.text}>TVL: ${btcstatsOnPool?.TVL}</p>
             </div>
 
             <div style={styles.StatsBtnContainer}>
                 <div style={styles.StatsContainer}>
                     <div>
                         <p style={styles.textDaily}>Daily Returns:</p>
-                        <p style={styles.Title}>2%</p>
+                        <p style={styles.Title}>{bankBOMBBTCB.closedForStaking ? '0.00' : btcstatsOnPool?.dailyAPR}%</p>
                     </div>
                     <div>
                         <p style={styles.text}>Your Stake:</p>
@@ -113,14 +113,14 @@ const BombFarmComponent = () => {
                     <p style={styles.FarmTitleText}>BSHARE-BNB</p>
                     <p style={styles.RecommendedStyle}>Recommended</p>
                 </div>
-                <p style={styles.text}>TVL: $123123</p>
+                <p style={styles.text}>TVL: ${bnbstatsOnPool?.TVL}</p>
             </div>
 
             <div style={styles.StatsBtnContainer}>
                 <div style={styles.StatsContainer}>
                     <div>
                         <p style={styles.textDaily}>Daily Returns:</p>
-                        <p style={styles.Title}>2%</p>
+                        <p style={styles.Title}>{bankBShareBNB.closedForStaking ? '0.00' : bnbstatsOnPool?.dailyAPR}%</p>
                     </div>
                     <div>
                         <p style={styles.text}>Your Stake:</p>
@@ -167,7 +167,7 @@ const styles = {
     container: {
         display: 'flex',
         flexDirection: 'column',    
-        width: '80%',
+        width: '100%',
         margin: '2% auto',
         height: '100%',
         backgroundColor: theme.bombFinanceColors.cardBg,
