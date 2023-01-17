@@ -1,55 +1,123 @@
-import React, {useMemo} from 'react'
+import React, { useMemo, useEffect, useState } from 'react';
 import TokenSymbol from '../../../components/TokenSymbol';
 import useBombStats from '../../../hooks/useBombStats';
 import useEarningsOnBoardroom from '../../../hooks/useEarningsOnBoardroom';
-import {getDisplayBalance} from '../../../utils/formatBalance';
+import { getDisplayBalance } from '../../../utils/formatBalance';
 import useStakedBalanceOnBoardroom from '../../../hooks/useStakedBalanceOnBoardroom';
 import useFetchBoardroomAPR from '../../../hooks/useFetchBoardroomAPR';
 import useTotalStakedOnBoardroom from '../../../hooks/useTotalStakedOnBoardroom';
 import theme from '../../../theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
-import useXbombAPR from '../../../hooks/useXbombAPR';
 import { roundAndFormatNumber } from '../../../0x';
 import useClaimRewardCheck from '../../../hooks/boardroom/useClaimRewardCheck';
 import useWithdrawCheck from '../../../hooks/boardroom/useWithdrawCheck';
+import useStakeToBoardroom from '../../../hooks/useStakeToBoardroom';
+import useWithdrawFromBoardroom from '../../../hooks/useWithdrawFromBoardroom';
+import useHarvestFromBoardroom from '../../../hooks/useHarvestFromBoardroom';
+import { getFullDisplayBalance } from '../../../utils/formatBalance';
+import useTokenBalance from '../../../hooks/useTokenBalance';
+import useBombFinance from '../../../hooks/useBombFinance';
+import useModal from '../../../hooks/useModal';
+import DepositModal from '../../Bank/components/DepositModal';
+import WithdrawModal from '../../Bank/components/WithdrawModal';
+
 
 const BoardRoomMiddleComponent = () => {
     const bombStats = useBombStats();
-    const tokenPriceInDollars = useMemo(() => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
+    const tokenPriceInDollars = useMemo(
+        () => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
         [bombStats],
     );
+    const bombFinance = useBombFinance();
+
     const stakedBalance = useStakedBalanceOnBoardroom();
     const stakedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(stakedBalance))).toFixed(2);
     const earnings = useEarningsOnBoardroom();
     const earnedInDollars = (Number(tokenPriceInDollars) * Number(getDisplayBalance(earnings))).toFixed(2);
     const boardroomAPR = useFetchBoardroomAPR();
     const totalStaked = useTotalStakedOnBoardroom();
-    
-    const xbombAPR = useXbombAPR();
-    const xbombTVL = useMemo(() => (xbombAPR ? Number(xbombAPR.TVL).toFixed(0) : null), [xbombAPR]);
+
+    // TVL for boardroom
+    const xbombTVL = useMemo(() => {
+        return (Number(getDisplayBalance(totalStaked)) * Number(tokenPriceInDollars)).toFixed(2);
+    }, [tokenPriceInDollars, totalStaked]);
+
     const canClaimReward = useClaimRewardCheck();
     const canWithdraw = useWithdrawCheck();
-    // console.log("earnings", Number(earnings))
-    // console.log("earningsInDollars", earnedInDollars)
-    // console.log("stakedBalance", Number(stakedBalance))
-    // console.log("stakedInDollars", stakedInDollars)
-    // console.log("boardroomAPR", boardroomAPR.toFixed(2))
-    // console.log("totalStaked", Number(totalStaked))
+
+    // // Withdraw, Deposit, and Reward Functions
+    const { onStake } = useStakeToBoardroom();
+    const { onWithdraw } = useWithdrawFromBoardroom();
+    const { onReward } = useHarvestFromBoardroom();
+    // const MaxtokenBalance = useTokenBalance(bombFinance.BSHARE);
+
+    // const [Depositval, setVal] = useState('');
+
+    // const fullBalance = useMemo(() => {
+    //     return getFullDisplayBalance(MaxtokenBalance, 18);    // 18 since this is BSHARE
+    // }, [MaxtokenBalance]);
+
+    // useEffect(() => {
+    //     setVal(Number(fullBalance));
+    // }, [fullBalance, setVal]);
+    const tokenBalance = useTokenBalance(bombFinance.BSHARE);
+
+    const [onPresentDeposit, onDismissDeposit] = useModal(
+        <DepositModal
+            max={tokenBalance}
+            onConfirm={(value) => {
+                onStake(value);
+                onDismissDeposit();
+            }}
+            tokenName={'BShare'}
+        />,
+    );
+
+    const [onPresentWithdraw, onDismissWithdraw] = useModal(
+        <WithdrawModal
+            max={stakedBalance}
+            onConfirm={(value) => {
+                onWithdraw(value);
+                onDismissWithdraw();
+            }}
+            tokenName={'BShare'}
+        />,
+    );
     return (
         <div style={styles.container}>
             <div style={styles.LeftContainer}>
                 <div style={styles.InvestmentRead}>
-                    <p style={{textDecoration: 'underline', color: '#9EE6FF'}}>Read Investment Strategy {'\>'}</p>
+                    <p style={{ textDecoration: 'underline', color: '#9EE6FF' }}>Read Investment Strategy {'>'}</p>
                 </div>
-                <button style={styles.InvestBtn}><p>Invest Now</p></button>
+                <button style={styles.InvestBtn}>
+                    <p>Invest Now</p>
+                </button>
                 <div style={styles.TwoBtn}>
-                    <button style={styles.SmallBtn}>
-                        <img style={{width: 30, marginRight: 10}} src="https://img.icons8.com/ios-filled/50/000000/discord-logo.png" alt="discord" />
+                    <button
+                        style={styles.SmallBtn}
+                        onClick={() => {
+                            window.open('https://discord.gg/tombfinance', '_blank');
+                        }}
+                    >
+                        <img
+                            style={{ width: 30, marginRight: 10 }}
+                            src="https://img.icons8.com/ios-filled/50/000000/discord-logo.png"
+                            alt="discord"
+                        />
                         <p>Chat on Discord</p>
                     </button>
-                    <button style={styles.SmallBtn}>
-                        <img style={{width: 30, marginRight: 10}} src="https://img.icons8.com/ios-glyphs/2x/document.png" alt="discord" />
+                    <button
+                        style={styles.SmallBtn}
+                        onClick={() => {
+                            window.open('https://docs.tomb.finance/', '_blank');
+                        }}
+                    >
+                        <img
+                            style={{ width: 30, marginRight: 10 }}
+                            src="https://img.icons8.com/ios-glyphs/2x/document.png"
+                            alt="discord"
+                        />
                         <p>Read Docs</p>
                     </button>
                 </div>
@@ -71,7 +139,7 @@ const BoardRoomMiddleComponent = () => {
                     <div>
                         <div style={styles.TotalStacked}>
                             <p style={styles.text}>{getDisplayBalance(totalStaked)}</p>
-                            <TokenSymbol size={20} symbol={'BSHARE'}  />
+                            <TokenSymbol size={20} symbol={'BSHARE'} />
                             <p style={styles.text}>Total Staked:</p>
                         </div>
                     </div>
@@ -84,7 +152,7 @@ const BoardRoomMiddleComponent = () => {
                             <div>
                                 <p>Your Stake:</p>
                                 <div style={styles.IconWithText}>
-                                    <TokenSymbol size={20} symbol={'BSHARE'}  />
+                                    <TokenSymbol size={20} symbol={'BSHARE'} />
                                     <p style={styles.text}>{stakedBalance ? Number(stakedBalance) : 0}</p>
                                 </div>
                                 <p style={styles.text}>≈ ${stakedInDollars ? stakedInDollars : 0}</p>
@@ -92,7 +160,7 @@ const BoardRoomMiddleComponent = () => {
                             <div>
                                 <p>Earned:</p>
                                 <div style={styles.IconWithText}>
-                                    <TokenSymbol size={20} symbol={'BOMB'}  />
+                                    <TokenSymbol size={20} symbol={'BOMB'} />
                                     <p style={styles.text}>{earnings ? Number(earnings) : 0}</p>
                                 </div>
                                 <p style={styles.text}>≈ ${earnedInDollars ? earnedInDollars : 0}</p>
@@ -100,20 +168,29 @@ const BoardRoomMiddleComponent = () => {
                         </div>
                         <div style={styles.BtnContainer}>
                             <div style={styles.RowBtn}>
-                                <button style={styles.BtnStyle}>
+                                <button
+                                    style={styles.BtnStyle}
+                                    onClick={onPresentDeposit}
+                                >
                                     <p style={styles.BtnText}>Deposit</p>
                                     <FontAwesomeIcon icon={faArrowUp} style={{}} />
                                 </button>
-                                <div style={{width: '48%', opacity: canWithdraw ? 1 : 0.5}}>
-                                    <button style={styles.BtnInsideStyle}>
+                                <div style={{ width: '48%', opacity: canWithdraw ? 1 : 0.5 }}>
+                                    <button
+                                        style={styles.BtnInsideStyle}
+                                        onClick={onPresentWithdraw}
+                                    >
                                         <p style={styles.BtnText}>Withdraw</p>
                                         <FontAwesomeIcon icon={faArrowDown} style={{}} />
                                     </button>
                                 </div>
                             </div>
                             <div style={styles.RowBtn}>
-                                <div style={{width: '100%', opacity: canClaimReward ? 1 : 0.5}}>
-                                    <button style={styles.RewardContainer}>
+                                <div style={{ width: '100%', opacity: canClaimReward ? 1 : 0.5 }}>
+                                    <button
+                                        style={styles.RewardContainer}
+                                        onClick={canClaimReward ? onReward : console.log('no reward')}
+                                    >
                                         <p style={styles.BtnText}>Claim Rewards</p>
                                         <TokenSymbol size={20} symbol={'BSHARE'} />
                                     </button>
@@ -121,21 +198,16 @@ const BoardRoomMiddleComponent = () => {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div style={styles.RightContainer}>
                 <p>Latest News</p>
             </div>
         </div>
+    );
+};
 
-
-
-
-    )
-}
-
-export default BoardRoomMiddleComponent
+export default BoardRoomMiddleComponent;
 
 const styles = {
     container: {
@@ -166,7 +238,8 @@ const styles = {
         flexDirection: 'row-reverse',
     },
     InvestBtn: {
-        background: 'radial-gradient(59345.13% 4094144349.28% at 39511.5% -2722397851.45%, rgba(0, 245, 171, 0.5) 0%, rgba(0, 173, 232, 0.5) 100%)',
+        background:
+            'radial-gradient(59345.13% 4094144349.28% at 39511.5% -2722397851.45%, rgba(0, 245, 171, 0.5) 0%, rgba(0, 173, 232, 0.5) 100%)',
         height: '45px',
         width: '100%',
         border: 'none',
@@ -194,6 +267,7 @@ const styles = {
         alignItems: 'center',
         background: '#aaa',
         border: 'none',
+        cursor: 'pointer',
     },
     LowerSection: {
         display: 'flex',
@@ -272,7 +346,7 @@ const styles = {
     BtnContainer: {
         width: '30%',
     },
-    EachTitleComponent:{
+    EachTitleComponent: {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -321,5 +395,5 @@ const styles = {
     },
     IconWithText: {
         display: 'flex',
-    }
-}
+    },
+};
