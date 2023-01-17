@@ -13,6 +13,8 @@ import ExchangeStat from '../../Bond/components/ExchangeStat';
 import {getDisplayBalance} from '../../../utils/formatBalance';
 import useBondStats from '../../../hooks/useBondStats';
 import { BOND_REDEEM_PRICE, BOND_REDEEM_PRICE_BN } from '../../../bomb-finance/constants';
+import useModal from '../../../hooks/useModal';
+import ExchangeModal from '../../Bond/components/ExchangeModal';
 
 
 const BondsBottomComponent = () => {
@@ -42,10 +44,41 @@ const BondsBottomComponent = () => {
         [bombFinance, addTransaction],
     );
     
-
-    console.log('cashPrice', cashPrice.toString())
     const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
     const isBondPurchasable = useMemo(() => Number(bondStat?.tokenInFtm) < 1.01, [bondStat]);
+    const balanceBomb = useTokenBalance("BOMB");
+    const balanceBbond = useTokenBalance("BBOND");
+
+    const [onPresentPurchase, onDismissPurchase] = useModal(
+        <ExchangeModal
+            title={"Purchase"}
+            description={!isBondPurchasable
+                ? 'BOMB is over peg'
+                : getDisplayBalance(bondsPurchasable, 18, 4) + ' BBOND available for purchase'}
+            max={balanceBomb}
+            onConfirm={(value) => {
+                handleBuyBonds(value);
+                onDismissPurchase();
+            }}
+            action={"Purchase"}
+            tokenName={"BOMB"}
+        />,
+    );
+
+    
+    const [onPresentRedeem, onDismissRedeem] = useModal(
+        <ExchangeModal
+            title={"Redeem"}
+            description={`${getDisplayBalance(bondBalance)} BBOND Available in wallet`}
+            max={balanceBbond}
+            onConfirm={(value) => {
+                handleBuyBonds(value);
+                onDismissRedeem();
+            }}
+            action={"Redeem"}
+            tokenName={"BOMB"}
+        />,
+    );
 
     return (
         <div style={styles.container}>
@@ -60,7 +93,7 @@ const BondsBottomComponent = () => {
             <div style={styles.FlexContainerBot}>
                 <div style={styles.CurrentPriceContainer}>
                     <p style={styles.text}>Current Price: (Bomb)^2</p>
-                    <p style={styles.Title}>BBond = {Number(bondBalance)} BTCB</p>
+                    <p style={styles.Title}>BBond = {Number(bondStat?.tokenInFtm).toFixed(4) || '-'} BTCB</p>
                 </div>
                 <div style={styles.RedeemContainer}>
                     <p style={styles.text}>Available to redeem:</p>
@@ -74,10 +107,10 @@ const BondsBottomComponent = () => {
                     <div style={styles.EachBtn}>
                         <div>
                             <p>Purchase BBond</p>
-                            <p>Bomb is over peg</p>
+                            <p style={{opacity: isBondPurchasable ? 0 : 1, marginBottom: isBondPurchasable ? -25 : 0}}>Bomb is over peg</p>
                         </div>
                         <div style={{opacity: (isBondPurchasable ? 1 : 0.5)}}>
-                            <button style={styles.BtnStyle} onClick={() => handleBuyBonds()}>
+                            <button style={styles.BtnStyle} onClick={() => isBondPurchasable ? onPresentPurchase() : console.log("Cannot purchase")}>
                                 <p style={styles.BtnText}>Purchase</p>
                                 <FontAwesomeIcon icon={faShoppingCart} style={{}} />
                             </button>
@@ -89,7 +122,7 @@ const BondsBottomComponent = () => {
                             <p>Purchase BBond</p>
                         </div>
                         <div style={{opacity: (isBondRedeemable ? 1 : 0.5)}}>
-                            <button style={styles.BtnStyle} onClick={() => handleRedeemBonds()}>
+                            <button style={styles.BtnStyle} onClick={() => isBondRedeemable ? onPresentRedeem() : console.log("Not redeemed")}>
                                 <p style={styles.BtnText}>Redeem</p>
                                 <FontAwesomeIcon icon={faArrowDown} style={{}} />
                             </button>
