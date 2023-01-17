@@ -12,6 +12,7 @@ import useTotalValueLocked from '../../../hooks/useTotalValueLocked';
 import moment from 'moment';
 import theme from '../../../theme';
 import MetaMaskLogo from '../../../assets/img/MetaMask.png';
+import useBombFinance from '../../../hooks/useBombFinance';
 
 const BombFinanceSummary = () => {
     const estimatedTWAP = useCashPriceInEstimatedTWAP()
@@ -24,7 +25,7 @@ const BombFinanceSummary = () => {
     const bombStats = useBombStats();
     const bShareStats = usebShareStats();
     const tBondStats = useBondStats();
-
+    const bombFinance = useBombFinance();
     const bombPriceInDollars = useMemo(
         () => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
         [bombStats],
@@ -81,9 +82,13 @@ const BombFinanceSummary = () => {
                             <p>${bombPriceInDollars ? bombPriceInDollars : 0}</p>
                             <p>{bombPriceInBNB ? bombPriceInBNB : 0} BTCB</p>
                         </div>
-                        <div style={styles.FifthCol}>
+                        <button style={styles.FifthCol} 
+                        onClick={() => {
+                            bombFinance.watchAssetInMetamask('BOMB');
+                        }}
+                        >
                             <img style={{ width: 40, marginTop: 10 }} src={MetaMaskLogo} alt={"Metamask Logo"} />
-                        </div>
+                        </button>
                     </div>
                     <div style={styles.EachRoww}>
                         <div style={styles.FirstCol}>
@@ -94,11 +99,14 @@ const BombFinanceSummary = () => {
                         <p style={styles.ThirdCol}>{bShareTotalSupply ? bShareTotalSupply : 0}</p>
                         <div style={styles.FourthCol}>
                             <p>${bSharePriceInDollars ? bSharePriceInDollars : 0}</p>
-                            <p>{bSharePriceInBNB ? bSharePriceInBNB : 0}BTCB</p>
+                            <p>{bSharePriceInBNB ? bSharePriceInBNB : 0} BTCB</p>
                         </div>
-                        <div style={styles.FifthCol}>
+                        <button style={styles.FifthCol}
+                        onClick={() => {
+                            bombFinance.watchAssetInMetamask('BSHARE');
+                        }}>
                             <img style={{ width: 40, marginTop: 20 }} src={MetaMaskLogo} alt={"Metamask Logo"} />
-                        </div>
+                        </button>
                     </div>
                     <div style={styles.EachRoww}>
                         <div style={styles.FirstCol}>
@@ -109,11 +117,14 @@ const BombFinanceSummary = () => {
                         <p style={styles.ThirdCol}>{tBondTotalSupply ? tBondTotalSupply : 0}</p>
                         <div style={styles.FourthCol}>
                             <p>${tBondPriceInDollars ? tBondPriceInDollars : 0}</p>
-                            <p>{tBondPriceInBNB ? tBondPriceInBNB : 0}BTCB</p>
+                            <p>{tBondPriceInBNB ? tBondPriceInBNB : 0} BTCB</p>
                         </div>
-                        <div style={styles.FifthCol}>
+                        <button style={styles.FifthCol}
+                        onClick={() => {
+                            bombFinance.watchAssetInMetamask('BBOND');
+                        }}>
                             <img style={{ width: 40, marginTop: 20 }} src={MetaMaskLogo} alt={"Metamask Logo"} />
-                        </div>
+                        </button>
                     </div>
                 </div>
                 <div>
@@ -131,7 +142,7 @@ const BombFinanceSummary = () => {
                     <div>
                         <p>Live TWAP: <text style={{ color: "#00E8A2" }}>{estimatedTWAPPriceDollar ? estimatedTWAPPriceDollar : 0}</text></p>
                         <p>TVL: <text style={{ color: "#00E8A2" }}>${TVL ? Math.floor(TVL) : 0}</text></p>
-                        <p>Last Epoch TWAP: <text style={{ color: "#00E8A2" }}>{lastTWAP ? Number(lastTWAP) : 0}</text></p>
+                        <p>Last Epoch TWAP: <text style={{ color: "#00E8A2" }}>{lastTWAP ? (Number(lastTWAP)/Math.pow(10,14)).toFixed(4) : 0}</text></p>
                     </div>
                 </div>
             </div>
@@ -239,6 +250,17 @@ const styles = {
     },
     FifthCol: {
         width: '100px',
+        backgroundColor: 'transparent',
+        border: 'none',
+        padding: '0px', 
+        margin: '0px',
+        // remove all the button styles 
+        '-webkit-appearance': 'none',
+        '-moz-appearance': 'none',
+        appearance: 'none',
+        cursor: 'pointer',
+        outline: 'none',
+        marginTop: -10
     },
 
 }
